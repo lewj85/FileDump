@@ -127,7 +127,7 @@ def main():
     atexit.register(functools.partial(clean_up_agents, agents))
     wrapped_env = WrappedEnv(env, visualize=args.render)
     runner = Runner(agent=agent, environment=wrapped_env)
-    runner.run(episodes=10, max_episode_timesteps=2000)
+    runner.run(episodes=10, max_episode_timesteps=600)
     print("Stats: ", runner.episode_rewards, runner.episode_timesteps,
           runner.episode_times)
 
