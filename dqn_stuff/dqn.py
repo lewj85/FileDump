@@ -1,4 +1,4 @@
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.layers import Conv2D, Dense, Flatten, Input, concatenate
 from keras.regularizers import l2
 from keras.optimizers import Adam
@@ -13,6 +13,18 @@ def main():
     
     # make and train model
     train_model(data, labels)
+    
+    # Predict
+    all_a1 = data['a1']
+    all_a2 = data['a2']
+    all_a3 = data['a3']
+    all_a4 = data['a4']
+    X_test = {'a1': all_a1[2], 'a2': all_a2[2], 'a3': all_a3[2], 'a4': all_a4[2]}
+    
+    model = load_model('./dqn1.h5')
+    y_test_pred = model.predict(X_test)
+    print('label should be '+str(labels[2]))
+    
     a = input('asdf')
 
 def load_data(filename):
@@ -34,7 +46,7 @@ def load_data(filename):
     data_cat = {'a1': shaped_data1, 'a2': shaped_data2, 'a3': shaped_data3, 'a4': shaped_data4}
     return data_cat, labels
 
-def train_model(data1, labels, lr=0.01, batch_size=10, num_epochs=10):
+def train_model(data1, labels, lr=0.01, batch_size=5, num_epochs=20):
     
     #num_examples = data1[0].shape[0]
     num_examples = data1['a4'].shape[0]
@@ -70,7 +82,7 @@ def train_model(data1, labels, lr=0.01, batch_size=10, num_epochs=10):
 
     # Create computational graph
     adm = Adam(lr=lr)  # Adam instead of Stochastic Gradient Descent
-    model.compile(loss='mean_squared_error', optimizer=adm)
+    model.compile(loss='mean_squared_error', optimizer=adm, metrics=['accuracy'])
 
     #print(type(X_train))
     #print(len(X_train))
@@ -85,8 +97,7 @@ def train_model(data1, labels, lr=0.01, batch_size=10, num_epochs=10):
     # Save
     model.save('./dqn1.h5')
 
-    # Predict
-    #y_test_pred = model.predict(X_valid)
+    
     # 35 w 4, 6th floor Tuesdays 10-11am
     
     
